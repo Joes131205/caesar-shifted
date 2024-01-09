@@ -1,0 +1,10 @@
+.container-game {
+    display: flex;
+    gap: 20px;
+}
+
+.square {
+    width: 200px;
+    height: 200px;
+    background-color: grey;
+}
