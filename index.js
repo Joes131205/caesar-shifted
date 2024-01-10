@@ -1,56 +1,74 @@
-"use strict";
+const originalTextEl = document.getElementById("originalText");
+const chiperedTextEl = document.getElementById("chiperedText");
 
-const squaresEl = document.querySelectorAll(".square");
+const upButton = document.getElementById("up");
+const downButton = document.getElementById("down");
+const restartButton = document.getElementById("restart");
 
-const scoreEl = document.getElementById("score");
-const highScoreEl = document.getElementById("highScore");
+const liveEl = document.getElementById("live");
+const streakEl = document.getElementById("streak");
+const highStreakEl = document.getElementById("highStreak");
 
-let score = 0;
-let highScore = 0;
+let originalText = "";
+let chiperedText = "";
+let currValue = 0;
+let lives = 0;
 
 let playing = true;
 
-let sequence = [1, 2, 3, 4];
+let streak = 0;
+let highStreak = 0;
 
-// let events = [addSquare, changeColor];
-// let squares = 4;
+async function init() {
+    streak = 0;
+    lives = 5;
+    switchRound();
+}
+init();
 
-squaresEl.forEach((square, index) => {
-    square.addEventListener("click", function () {
-        if (playing) {
-            console.log(square, index);
-        }
-    });
-});
-
-// TODO: Handle Render (10 Attempts)
-function handleRender() {
-    if (playing) {
-        for (let i = 0; i < sequence.length; i++) {
-            (function (index) {
-                setTimeout(function () {
-                    squaresEl[sequence[index] - 1].style.backgroundColor =
-                        "#2ecc71";
-                }, i * 2000); // Delay based on the loop index
-                setTimeout(function () {
-                    squaresEl[sequence[index] - 1].style.backgroundColor =
-                        "grey";
-                }, (i + 1) * 2000); // Delay for reverting color
-            })(i);
-        }
-    }
+async function switchRound() {
+    await updateElements();
+    renderElement();
+}
+async function updateElements() {
+    originalText = await generateWord();
+    currValue = generateValue();
+    chiperedText = caesarChiper(originalText, currValue);
 }
 
-handleRender();
-function startGame() {
-    playing = true;
-    sequence = [];
-    score = 0;
-    scoreEl.textContent = 0;
-    handleRender();
+function generateValue() {
+    value = Math.floor(Math.random() * 26) + 1;
+    return value;
 }
 
-startGame();
-function addSquare() {}
+async function generateWord() {
+    const response = await fetch("https://random-word-api.herokuapp.com/word");
+    const data = await response.json();
+    return data[0];
+}
 
-function changeColor() {}
+function caesarChiper(text, value) {
+    return text
+        .split("")
+        .map((char) => {
+            if (char.match(/[a-zA-Z]/)) {
+                const charCode = char.charCodeAt(0);
+                const isUpperCase = char === char.toUpperCase();
+                const baseCharCode = isUpperCase
+                    ? "A".charCodeAt(0)
+                    : "a".charCodeAt(0);
+                const shiftedCharCode =
+                    ((charCode - baseCharCode + value) % 26) + baseCharCode;
+                return String.fromCharCode(shiftedCharCode);
+            } else {
+                return char;
+            }
+        })
+        .join("");
+}
+function renderElement() {
+    originalTextEl.textContent = originalText;
+    chiperedTextEl.textContent = chiperedText;
+    streakEl.textContent = streak;
+    highStreakEl.textContent = highStreak;
+}

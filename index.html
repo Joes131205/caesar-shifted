@@ -3,24 +3,39 @@
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Document</title>
+        <title>Caesar Shifted</title>
         <link rel="stylesheet" href="style.css" />
     </head>
     <body>
+        <h1>Caesar Shifted</h1>
         <section class="container-game">
-            <div class="square"></div>
-            <div class="square"></div>
-            <div class="square"></div>
-            <div class="square"></div>
+            <div class="container-original">
+                <p>Original Text:</p>
+                <p id="originalText"></p>
+            </div>
+            <div class="container-counter">
+                <button id="up">+</button>
+                <p id="value">0</p>
+                <button id="down">-</button>
+            </div>
+            <div class="container-chipered">
+                <p>Original Text:</p>
+                <p id="chiperedText">-</p>
+            </div>
         </section>
         <section class="container-status">
-            <div class="container-score">
-                <p>Score</p>
-                <p id="score"></p>
+            <button id="restart">Restart?</button>
+            <div class="container-lives">
+                <p>Lives</p>
+                <p id="live">5</p>
             </div>
-            <div class="container-highScore">
-                <p>High Score</p>
-                <p id="highScore"></p>
+            <div class="container-streak">
+                <p>Streak</p>
+                <p id="streak">0</p>
+            </div>
+            <div class="container-highStreak">
+                <p>High streak</p>
+                <p id="highStreak">0</p>
             </div>
         </section>
     </body>
