@@ -2,7 +2,9 @@ const originalTextEl = document.getElementById("originalText");
 const chiperedTextEl = document.getElementById("chiperedText");
 
 const upButton = document.getElementById("up");
+const valueEl = document.getElementById("value");
 const downButton = document.getElementById("down");
+const submitButton = document.getElementById("submit");
 const restartButton = document.getElementById("restart");
 
 const liveEl = document.getElementById("live");
@@ -11,18 +13,15 @@ const highStreakEl = document.getElementById("highStreak");
 
 let originalText = "";
 let chiperedText = "";
+let inputValue = 0;
 let currValue = 0;
-let lives = 0;
-
-let playing = true;
 
 let streak = 0;
 let highStreak = 0;
 
 async function init() {
     streak = 0;
-    lives = 5;
-    switchRound();
+    await switchRound();
 }
 init();
 
@@ -30,10 +29,12 @@ async function switchRound() {
     await updateElements();
     renderElement();
 }
+
 async function updateElements() {
     originalText = await generateWord();
     currValue = generateValue();
     chiperedText = caesarChiper(originalText, currValue);
+    // console.log(originalText, chiperedText, currValue);
 }
 
 function generateValue() {
@@ -66,9 +67,43 @@ function caesarChiper(text, value) {
         })
         .join("");
 }
+
 function renderElement() {
     originalTextEl.textContent = originalText;
     chiperedTextEl.textContent = chiperedText;
     streakEl.textContent = streak;
     highStreakEl.textContent = highStreak;
 }
+
+upButton.addEventListener("click", function () {
+    inputValue++;
+    if (inputValue > 26) {
+        inputValue = 1;
+    }
+    valueEl.textContent = inputValue;
+});
+
+downButton.addEventListener("click", function () {
+    inputValue--;
+    if (inputValue < 0) {
+        inputValue = 26;
+    }
+    valueEl.textContent = inputValue;
+});
+
+function handleGuess() {
+    if (inputValue === currValue) {
+        streak++;
+        streakEl.textContent = streak;
+        if (streak > highStreak) {
+            highStreak = streak;
+        }
+        switchRound();
+    } else {
+        streak = 0;
+        streakEl.textContent = streak;
+        switchRound();
+    }
+}
+
+submitButton.addEventListener("click", handleGuess);
