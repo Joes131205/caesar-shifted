@@ -1,3 +1,6 @@
+const gameContainer = document.querySelector(".container-game");
+const allChildElements = [...gameContainer.children];
+
 const originalTextEl = document.getElementById("originalText");
 const chiperedTextEl = document.getElementById("chiperedText");
 
@@ -28,15 +31,24 @@ init();
 async function switchRound() {
     await updateElements();
     renderElement();
+    enableInput();
 }
 
 async function updateElements() {
     originalText = await generateWord();
     currValue = generateValue();
     chiperedText = caesarChiper(originalText, currValue);
-    // console.log(originalText, chiperedText, currValue);
 }
-
+function disableInput() {
+    upButton.classList.add("disabled");
+    downButton.classList.add("disabled");
+    submitButton.classList.add("disabled");
+}
+function enableInput() {
+    upButton.classList.remove("disabled");
+    downButton.classList.remove("disabled");
+    submitButton.classList.remove("disabled");
+}
 function generateValue() {
     value = Math.floor(Math.random() * 26) + 1;
     return value;
@@ -80,7 +92,7 @@ upButton.addEventListener("click", function () {
     if (inputValue > 26) {
         inputValue = 1;
     }
-    valueEl.textContent = inputValue;
+    valueEl.textContent = `${inputValue < 10 ? "0" : ""}${inputValue}`;
 });
 
 downButton.addEventListener("click", function () {
@@ -88,22 +100,52 @@ downButton.addEventListener("click", function () {
     if (inputValue < 0) {
         inputValue = 26;
     }
-    valueEl.textContent = inputValue;
+    valueEl.textContent = `${inputValue < 10 ? "0" : ""}${inputValue}`;
 });
 
+const addAndRemoveClass = (indices, className) => {
+    indices.forEach((index) => {
+        allChildElements[index].classList.add(className);
+        setTimeout(() => {
+            allChildElements[index].classList.remove(className);
+        }, 1000);
+    });
+};
+
 function handleGuess() {
+    disableInput();
     if (inputValue === currValue) {
         streak++;
         streakEl.textContent = streak;
         if (streak > highStreak) {
             highStreak = streak;
         }
+        addAndRemoveClass([1, 3, 5, 7], "correct");
+
+        setTimeout(() => {
+            addAndRemoveClass([2, 6], "correct");
+            setTimeout(() => {
+                switchRound();
+            }, 4000);
+        }, 500);
+
         switchRound();
     } else {
         streak = 0;
         streakEl.textContent = streak;
-        switchRound();
+
+        addAndRemoveClass([1, 3, 5, 7], "wrong");
+
+        setTimeout(() => {
+            addAndRemoveClass([2, 6], "wrong");
+            setTimeout(() => {
+                switchRound();
+            }, 4000);
+        }, 500);
     }
 }
 
-submitButton.addEventListener("click", handleGuess);
+submitButton.addEventListener("click", function () {
+    console.log("clicked");
+    handleGuess();
+});

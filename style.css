@@ -1,0 +1,111 @@
+body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    justify-content: center;
+    gap: 2rem;
+    height: 100vh;
+    margin: 0;
+    background-color: rgb(17, 17, 17);
+    color: white;
+}
+
+.container-game {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-rows: 1fr 1fr 1fr;
+    font-size: x-large;
+    row-gap: 1rem;
+    column-gap: 1rem;
+}
+
+.disabled {
+    pointer-events: none;
+    background-color: grey;
+}
+
+.container-counter > div {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4rem;
+}
+
+.container-counter {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+.container-counter > div > button {
+    padding: 1rem;
+}
+.container-counter > button {
+    padding: 1rem 2rem;
+    font-size: large;
+}
+
+.container-game > div {
+    padding: 1rem 10rem;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+.container-status > button {
+    padding: 1rem 2rem;
+}
+
+.container-status {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10rem;
+}
+
+.correct {
+    animation: correctBuzzer 1s;
+    transition: 1s;
+}
+
+.wrong {
+    animation: wrongBuzzer 1s;
+    transition: 1s;
+}
+@keyframes correctBuzzer {
+    0% {
+        transform: rotate(0deg);
+        background-color: rgb(17, 17, 17);
+    }
+
+    50% {
+        transform: rotate(180deg);
+        background-color: green;
+    }
+
+    100% {
+        transform: rotate(360deg);
+        background-color: rgb(17, 17, 17);
+    }
+}
+
+@keyframes wrongBuzzer {
+    0% {
+        transform: rotate(0deg);
+        background-color: rgb(17, 17, 17);
+    }
+
+    50% {
+        transform: rotate(180deg);
+        background-color: red;
+    }
+
+    100% {
+        transform: rotate(360deg);
+        background-color: rgb(17, 17, 17);
+    }
+}
