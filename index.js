@@ -8,6 +8,9 @@ const upButton = document.getElementById("up");
 const valueEl = document.getElementById("value");
 const downButton = document.getElementById("down");
 const submitButton = document.getElementById("submit");
+
+const actualValueEl = document.getElementById("actualValue");
+
 const restartButton = document.getElementById("restart");
 
 const liveEl = document.getElementById("live");
@@ -22,7 +25,10 @@ let currValue = 0;
 let streak = 0;
 let highStreak = 0;
 
+restartButton.addEventListener("click", init);
+
 async function init() {
+    disableInput();
     streak = 0;
     await switchRound();
 }
@@ -35,6 +41,7 @@ async function switchRound() {
 }
 
 async function updateElements() {
+    actualValueEl.textContent = "";
     originalText = await generateWord();
     currValue = generateValue();
     chiperedText = caesarChiper(originalText, currValue);
@@ -121,21 +128,19 @@ function handleGuess() {
             highStreak = streak;
         }
         addAndRemoveClass([1, 3, 5, 7], "correct");
-
+        addAndRemoveClass([4], "correctButFaster");
         setTimeout(() => {
             addAndRemoveClass([2, 6], "correct");
             setTimeout(() => {
                 switchRound();
             }, 4000);
         }, 500);
-
-        switchRound();
     } else {
         streak = 0;
         streakEl.textContent = streak;
-
+        actualValueEl.textContent = `Actual value: ${currValue}`;
         addAndRemoveClass([1, 3, 5, 7], "wrong");
-
+        addAndRemoveClass([4], "wrongButFaster");
         setTimeout(() => {
             addAndRemoveClass([2, 6], "wrong");
             setTimeout(() => {
