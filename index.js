@@ -15,6 +15,7 @@ const restartButton = document.getElementById("restart");
 
 const liveEl = document.getElementById("live");
 const streakEl = document.getElementById("streak");
+const streakDiv = document.getElementById("streak-div");
 const highStreakEl = document.getElementById("highStreak");
 
 let originalText = "";
@@ -30,6 +31,8 @@ restartButton.addEventListener("click", init);
 async function init() {
     disableInput();
     streak = 0;
+    streakDiv.classList.remove("mediumStreak");
+    streakDiv.classList.remove("highStreak");
     await switchRound();
 }
 init();
@@ -115,7 +118,7 @@ const addAndRemoveClass = (indices, className) => {
         allChildElements[index].classList.add(className);
         setTimeout(() => {
             allChildElements[index].classList.remove(className);
-        }, 1000);
+        }, 2000);
     });
 };
 
@@ -124,6 +127,11 @@ function handleGuess() {
     if (inputValue === currValue) {
         streak++;
         streakEl.textContent = streak;
+        if (streak > 5) {
+            streakDiv.classList.add("mediumStreak");
+        } else if (streak > 10) {
+            streakDiv.classList.add("highStreak");
+        }
         if (streak > highStreak) {
             highStreak = streak;
         }
@@ -138,6 +146,8 @@ function handleGuess() {
     } else {
         streak = 0;
         streakEl.textContent = streak;
+        streakEl.classList.remove("mediumStreak");
+        streakEl.classList.remove("highStreak");
         actualValueEl.textContent = `Actual value: ${currValue}`;
         addAndRemoveClass([1, 3, 5, 7], "wrong");
         addAndRemoveClass([4], "wrongButFaster");
